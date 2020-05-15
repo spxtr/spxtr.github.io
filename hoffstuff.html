@@ -37,6 +37,7 @@ img {
     height: auto;
 }
 .MathJax {
+    overflow-x: auto;
 }
 </style>
 <title>Hofstadter's Butterfly</title>
