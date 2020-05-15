@@ -5,7 +5,7 @@
 <style>
 body {
     background-color: #f0f0f0;
-    margin: 40px auto;
+    margin: 0 auto;
     max-width: 800px;
     line-height: 1.6;
     font-size: 18px;
@@ -30,17 +30,19 @@ pre code {
 
 ## About
 
-Crystals have a recurring lattice structure with a given periodicity. Usually the atoms are a few angstroms apart, thats a few times \\(10^{-10}\\) meters. In conductors, electrons can move about in this lattice. If you turn on a magnetic field, then these electrons will undergo cyclotron motion. For small fields the radius of the cyclotron motion will be much larger than the lattice spacing, but as you go to higher and higher fields, you might get closer to it. In 1976, Douglas Hofstadter published a nice paper[[1]](#fn1) describing an interesting relationship having to do with the ratio of the magnetic flux to the size of the lattice of 2D crystals.
+Crystals have a recurring lattice structure with periodicities of a few angstroms, that is, a few times \\(10^{-10}\\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity, this one related to the strength of the field. In 1976, Douglas Hofstadter published a paper[[1]](#fn1) describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a fractal pattern that looks like a butterfly.
 
-The symbol \\(\alpha\\) represents the ratio of the magnetic field \\(H\\) to the size of the lattice \\(a\\), with appropriate constant factors to make it dimensionless. In experiments, we usually cannot change the size of the lattice, but we can change the strength of the magnetic field.
+The symbol \\(\alpha\\) represents the ratio of the magnetic flux through a lattice cell (\\(a^2 B\\) for a square lattice of side length \\(a\\)) to the magnetic flux quantum \\(h/e\\) (SI units please).
 
-$$\alpha = a^2 H / 2\pi (\hbar c/e)$$
+$$\alpha = a^2 B / (h/e)$$
+
+In experiments, we usually cannot change the size of the lattice, but we can change the strength of the magnetic field. To reach \\(\alpha=1\\) in a typical crystal lattice requires fields in the tens of thousands of teslas, which is not feasible with modern technology. MRIs go up to a few teslas, for context. In recent years we've managed to avoid the problem by using atypical crystal lattices. More on that later.
 
 After a fair amount of work, Hofstadter derives an eigenvalue equation relating the energy of a state \\(\epsilon\\) to \\(\alpha\\). There's a phase factor \\(\nu\\) that is important in some situations.
 
 $$g(m+1)+g(m-1)+2\cos(2\pi m\alpha-\nu)g(m)=\epsilon g(m)$$
 
-The set of \\(\epsilon\\) and \\(\alpha\\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \\(\alpha\\). Specifically, if \\(\alpha = p/q\\) for integers \\(p\\) and \\(q\\), then there will be \\(q\\) intervals of energy that solve the problem. This is unusual, because we can continuously tune field, and a tiny change in field may lead to an enormous change of \\(q\\).
+The set of \\(\epsilon\\) and \\(\alpha\\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \\(\alpha\\). Specifically, if \\(\alpha = p/q\\) for integers \\(p\\) and \\(q\\), then there will be \\(q\\) intervals of energy that solve the problem. This is unusual, because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \\(q\\).
 
 For those who know what a Spirograph is, the rationality criterion is analogous to the fact that the Spirograph will eventually trace back over itself only if the ratio of the size of the wheels is rational.
 
@@ -64,14 +66,14 @@ Hofstadter does additional work and shows that a necessary condition for the sol
 
 $$\left\lvert \mathrm{Tr} \prod_{m=0}^q \begin{pmatrix} \epsilon - 2\cos(2\pi m \alpha - \nu) & -1 \\\\ 1 & 0\end{pmatrix} \right\rvert \leq 4$$
 
-Define the matrix like so. I use unicode for identifiers so that it's more clear how the code maps to the equations.
+Define the matrix like so.
 
 ```
 def A(ε, m, α, ν):
     return np.array([[ε - 2*np.cos(2*np.pi*m*α - ν), -1], [1, 0]])
 ```
 
-We need a rational list of magnetic fields and energies to compute this trace at. If you want a higher quality fan, add more prime numbers to the list, or increase the resolution of energies.
+We need a rational list of magnetic fields and energies to compute this trace at. If you want a higher quality fan, add more prime numbers to the list, or increase the resolution of energies. The butterfly is symmetric above \\(1/2\\) so we can save computation time by only computing one half of it.
 
 ```
 αs = []
@@ -82,7 +84,7 @@ for q in [2, 3, 5, 7, 11, 13, 17, 19]:
 εs = np.linspace(-4, 4, 1001)
 ```
 
-Now iterate over all fields and energies, computing the trace of the product for each. This takes about 3 seconds on my laptop.
+Now iterate over all fields and energies, computing the trace of the product for each. This takes about 3 seconds on my laptop. Presumably in 1976 it took a bit longer.
 
 ```
 trs = np.empty((len(αs), len(εs)))
