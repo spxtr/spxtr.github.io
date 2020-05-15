@@ -1,5 +1,5 @@
 <head>
-<title>Hofstadter's Butterfly</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -23,7 +23,12 @@ pre code {
     font-size: 16px;
     font-family: 'Roboto Mono', monospace;
 }
+img {
+    max-width:100%;
+    height:auto;
+}
 </style>
+<title>Hofstadter's Butterfly</title>
 <body>
 
 # Hofstadter's Butterfly

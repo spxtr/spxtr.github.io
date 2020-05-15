@@ -1,5 +1,5 @@
 <head>
-<title>Hofstadter's Butterfly</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -23,7 +23,12 @@ pre code {
     font-size: 16px;
     font-family: 'Roboto Mono', monospace;
 }
+img {
+    max-width:100%;
+    height:auto;
+}
 </style>
+<title>Hofstadter's Butterfly</title>
 <body>
 <h1>Hofstadter's Butterfly</h1>
 <h2>About</h2>
@@ -33,7 +38,7 @@ pre code {
 <p>In experiments, we usually cannot change the size of the lattice, but we can change the strength of the magnetic field. To reach \(\alpha=1\) in a typical crystal lattice requires fields in the tens of thousands of teslas, which is not feasible with modern technology. MRIs go up to a few teslas, for context. In recent years we've managed to avoid the problem by using atypical crystal lattices. More on that later.</p>
 <p>After a fair amount of work, Hofstadter derives an eigenvalue equation relating the energy of a state \(\epsilon\) to \(\alpha\). There's a phase factor \(\nu\) that is important in some situations.</p>
 <p>$$g(m+1)+g(m-1)+2\cos(2\pi m\alpha-\nu)g(m)=\epsilon g(m)$$</p>
-<p>The set of \(\epsilon\) and \(\alpha\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \(\alpha\). Specifically, if \(\alpha = p/q\) for integers \(p\) and \(q\), then there will be \(q\) intervals of energy that solve the problem. This is unusual, because we can continuously tune field. A tiny change in field may lead to an enormous change of \(q\).</p>
+<p>The set of \(\epsilon\) and \(\alpha\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \(\alpha\). Specifically, if \(\alpha = p/q\) for integers \(p\) and \(q\), then there will be \(q\) intervals of energy that solve the problem. This is unusual, because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \(q\).</p>
 <p>For those who know what a Spirograph is, the rationality criterion is analogous to the fact that the Spirograph will eventually trace back over itself only if the ratio of the size of the wheels is rational.</p>
 <p>Anyway, enough talk. Lets compute it. I'm going to use Python, because it's rad.</p>
 <h2>Imports</h2>
