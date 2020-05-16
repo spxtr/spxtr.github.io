@@ -1,45 +1,49 @@
 # Hofstadter's Butterfly
 
-Crystals have a recurring lattice structure with periodicities of a few angstroms, that is, a few times \\(10^{-10}\\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity, this one related to the strength of the field. In 1976, Douglas Hofstadter published a paper[[1]](#fn1) describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a fractal pattern that looks like a butterfly.
+Crystals have a recurring lattice structure with periodicities of a few times \\(10^{-10}\\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity related to the strength of the field. In 1976, Douglas Hofstadter published a paper[[1]](#fn1) describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!
 
-The symbol \\(\alpha\\) represents the ratio of the magnetic flux through a lattice cell (\\(a^2 B\\) for a square lattice of side length \\(a\\)) to the magnetic flux quantum \\(h/e\\).
+## Background
+
+The symbol \\(\alpha\\) represents the ratio of the magnetic flux through a lattice cell (\\(a^2 B\\) for a square lattice of side length \\(a\\)) to the magnetic flux quantum \\(h/e\\). It is unitless.
 
 $$\alpha = a^2 B / (h/e)$$
 
-In experiments, we usually cannot change the size of the lattice, but we can change the strength of the magnetic field. To reach \\(\alpha=1\\) in a typical crystal lattice requires fields in the tens of thousands of teslas, which is not feasible with modern technology. MRIs go up to a few teslas, for context. In recent years we've managed to avoid this problem by using atypically large crystal lattices. More on that later.
+In most experiments we cannot change the size of the lattice, so we control \\(\alpha\\) by controlling the magnetic field. To reach \\(\alpha=1\\) in a typical crystal lattice requires fields in the tens of thousands of teslas, which is not feasible with modern technology. For context, MRIs go up to a few teslas. In recent years we've managed to sidestep this problem by using atypically large crystal lattices. More on that later.
 
-After a fair amount of work, Hofstadter derives an eigenvalue equation relating the energy of a state \\(\epsilon\\) to \\(\alpha\\). There's a phase factor \\(\nu\\) that is important in some situations.
+If you are interested in the mathematical derivation of the butterfly then I recommend reading Hofstadter's original paper. It's quite readable, especially if you have studied the quantum Hall effect. After a fair amount of work, Hofstadter derives an eigenvalue equation relating the energy of a state \\(\epsilon\\) to \\(\alpha\\).
 
 $$g_{m+1}+g_{m-1}+2\cos(2\pi m\alpha-\nu)g_m=\epsilon g_m$$
 
-The set of \\(\epsilon\\) and \\(\alpha\\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \\(\alpha\\). Specifically, if \\(\alpha = p/q\\) for integers \\(p\\) and \\(q\\), then there will be \\(q\\) intervals of energy that solve the problem. This is unusual, because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \\(q\\).
+\\(\nu\\) is a phase that can take values between \\(0\\) and \\(2\pi\\).
+
+The set of \\(\epsilon\\) and \\(\alpha\\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \\(\alpha\\). Specifically, if \\(\alpha = p/q\\) for integers \\(p\\) and \\(q\\), then there will be \\(q\\) intervals of energy that solve the problem. This is unusual because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \\(q\\).
 
 For those who know what a Spirograph is, the rationality criterion is analogous to the fact that the Spirograph will eventually trace back over itself only if the ratio of the size of the wheels is rational.
 
-Anyway, enough talk. Lets compute it. I'm going to use Python because it's rad.
+Anyway, enough talk. Time to code. I'm going to use Python because it's rad.
 
 ```
 import numpy as np
-import scipy
-import scipy.signal
-import scipy.linalg
+from scipy import linalg
 import matplotlib.pyplot as plt
 ```
 
 ## Hofstadter's original method
 
+[Code for this part.](hoffcode/part0.py)  
+
 Hofstadter does additional work and shows that a necessary condition for the solution to be physically meaningful is for the following inequality to hold, where \\(\alpha = p/q\\) and \\(\nu = \pi/2q\\).
 
 $$\left | \mathrm{Tr} \prod_{m=0}^q \begin{pmatrix} \epsilon - 2\cos(2\pi m \alpha - \nu) & -1 \\\\ 1 & 0\end{pmatrix} \right | \leq 4$$
 
-Define the matrix like so.
+In code, define the matrix like so:
 
 ```
 def A(ε, m, α, ν):
     return np.array([[ε - 2*np.cos(2*np.pi*m*α - ν), -1], [1, 0]])
 ```
 
-We need a rational list of magnetic fields and energies to compute this trace at. If you want a higher quality fan, add more prime numbers to the list, or increase the resolution of energies. The butterfly is symmetric above \\(1/2\\) so we can save computation time by only computing one half of it.
+I need a rational list of magnetic fields and energies to compute this trace at. The butterfly is symmetric above \\(1/2\\) so I can save computation time by only computing one half of it.
 
 ```
 αs = []
@@ -50,7 +54,7 @@ for q in [2, 3, 5, 7, 11, 13, 17, 19]:
 εs = np.linspace(-4, 4, 1001)
 ```
 
-Now iterate over all fields and energies, computing the trace of the product for each. This takes about 3 seconds on my laptop. Presumably in 1976 it took a bit longer.
+Next, I iterate over all fields and energies, computing the trace of the product for each. This takes about 3 seconds on my laptop. In 1976 it probably took a bit longer.
 
 ```
 trs = np.empty((len(αs), len(εs)))
@@ -62,7 +66,7 @@ for i, (_, p, q) in enumerate(αs):
         trs[i, j] = np.abs(np.trace(m))
 ```
 
-Now plot every point that has trace less than 4. If you rearrange this code such that there is a plot call for each point, the code will be much simpler but also extremely slow. That's why I filter the output before calling plot once.
+Finally, I plot every point that has trace less than 4. If you rearrange this code such that there is a plot call for each point, the code will be much simpler but also extremely slow. That's why I filter the output before calling plot once.
 
 ```
 xs = []
@@ -72,19 +76,17 @@ for (α, _, _), tr in zip(αs, trs):
         if t < 4:
             xs.extend([ε, ε])
             ys.extend([α, 1 - α])
+
 plt.figure(figsize=(6, 4))
 plt.plot(xs, ys, 'k,')
-plt.xlim(-4, 4)
-plt.ylim(0, 1)
 plt.xlabel('$\\epsilon$')
 plt.ylabel('$\\alpha$')
-plt.tight_layout()
 plt.show()
 ```
 
-![Simple Hofstadter butterfly.](hoffimg/0_0.png "Simple Hofstadter butterfly")
+![Simple Hofstadter butterfly.](hoffimg/0_0.png "Simple Hofstadter butterfly") 
 
-Not bad! There are a few problems though. Firstly, to get a better picture we'll need to go to higher \\(q\\) and finer \\(\epsilon\\). The runtime will depend linearly on the resolution in \\(\epsilon\\) and quadratically in \\(q\\). The actual traces can be very sharp in energy, which means that if our spacing isn't fine enough we will miss solutions, which is especially noticable at the corners and edges of the butterfly. By going up to \\(q=29\\) we get a nicer image, but it's still not exactly perfect.
+Not bad! There are a few problems though. First, to get a better picture I'll need to go to higher \\(q\\) and finer \\(\epsilon\\). That gets slow fast, since the runtime depends linearly on the resolution in \\(\epsilon\\) and quadratically on \\(q\\). The actual traces can be very sharp in energy, which means that if my energy spacing isn't fine enough then I will miss solutions. This is especially noticable at the corners and edges of the butterfly. By going up to \\(q=29\\) I get a nicer image, but it's still not exactly perfect.
 
 ![Simple Hofstadter butterfly, animated!](hoffimg/0_1.png "Simple Hofstadter butterfly, animated!")
 
@@ -113,7 +115,7 @@ size = 200
 eigs = np.zeros((len(αs), len(νs), size))
 for i, α in enumerate(αs):
     for j, ν in enumerate(νs):
-        eigs[i, j, :] = scipy.linalg.eigvalsh(Hamiltonian(size, α, ν))
+        eigs[i, j, :] = linalg.eigvalsh(Hamiltonian(size, α, ν))
 eigs = eigs.reshape((len(αs), len(νs)*(size)))
 ```
 
