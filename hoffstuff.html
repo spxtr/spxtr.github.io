@@ -63,7 +63,7 @@ img {
 <body>
 <h1>Hofstadter's Butterfly</h1>
 <p><span id="attrib"><em>Written in May 2020 by <a href="https://github.com/spxtr">spxtr</a>. All of the code used to generate the figures is available on <a href="https://github.com/spxtr/spxtr.github.io">GitHub</a>. Feel free to open issues and pull requests.</em></span></p>
-<p>Crystals have a recurring lattice structure with periodicities of a few times \(10^{-10}\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity related to the strength of the field. In 1976, Douglas Hofstadter published a paper<a href="#fn1">[1]</a> describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!</p>
+<p>Crystals have a recurring lattice structure with periodicities of a few times \(10^{-10}\) meters. In a magnetic field, electrons in the crystal undergo cyclotron motion with a different periodicity. In 1976, Douglas Hofstadter described<a href="#fn1">[1]</a> the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!</p>
 <ol>
 <li><a href="#background">Background</a></li>
 <li><a href="#original">Hofstadter's original method</a></li>
@@ -75,10 +75,10 @@ img {
 </ol>
 <p><a name="background"></a></p>
 <h2>Background</h2>
-<p>The symbol \(\alpha\) represents the ratio of the magnetic flux through a lattice cell (\(a^2 B\) for a square lattice of side length \(a\)) to the magnetic flux quantum \(h/e\).</p>
+<p>The symbol \(\alpha\) represents the ratio of the magnetic flux through a lattice cell (\(a^2 B\) for a square lattice of side length \(a\)) to the magnetic flux quantum \(h/e\):</p>
 <p>$$\alpha = a^2 B / (h/e)$$</p>
 <p>In most experiments we cannot change the size of the lattice, so we control \(\alpha\) by controlling the magnetic field. To reach \(\alpha=1\) in a typical crystal lattice requires fields in the tens of thousands of teslas, which is not feasible with modern technology. For context, MRIs go up to a few teslas. In recent years we've managed to sidestep this problem by using atypically large crystal lattices. More on that later.</p>
-<p>If you are interested in the mathematical derivation of the butterfly then I recommend reading Hofstadter's original paper. It's quite readable, especially if you have studied the quantum Hall effect. After a fair amount of work, Hofstadter derives an eigenvalue equation relating the energy of a state \(\epsilon\) to \(\alpha\).</p>
+<p>If you are interested in the mathematical derivation of the butterfly then I recommend reading Hofstadter's original paper. It's quite readable, especially if you have studied the quantum Hall effect. I will not go into the details here. He starts with a simple dispersion \(E(\vec{k})=2E_0(\cos k_xa + \cos k_ya)\) and computes the effect of a magnetic field. After a fair amount of work, he derives an eigenvalue equation relating the energy of a state \(\epsilon\) to \(\alpha\):</p>
 <p>$$g_{n+1}+g_{n-1}+2\cos(2\pi n\alpha-\nu)g_n=\epsilon g_n$$</p>
 <p>\(\nu\) is a phase that can take values between \(0\) and \(2\pi\).</p>
 <p>The set of \(\epsilon\) and \(\alpha\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \(\alpha\). Specifically, if \(\alpha = p/q\) for integers \(p\) and \(q\), then there will be \(q\) intervals of energy that solve the problem. This is unusual because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \(q\).</p>
@@ -90,9 +90,9 @@ import matplotlib.pyplot as plt
 </code></pre>
 <p><a name="original"></a></p>
 <h2>Hofstadter's original method <span class="sourcelink"><a href="hoffcode/part0.py">[source]</a></span></h2>
-<p>The eigenvalue equation can be recast in the following form.</p>
+<p>The eigenvalue equation can be recast in the following form:</p>
 <p>$$\begin{pmatrix} g_{n+1} \\ g_n \end{pmatrix} = \begin{pmatrix}\epsilon - 2\cos(2\pi n\alpha-\nu) &amp; -1 \\ 1 &amp; 0\end{pmatrix}\begin{pmatrix} g_n \\ g_{n-1} \end{pmatrix}$$</p>
-<p>Hofstadter does additional work and shows that a necessary condition for the solution to be physically meaningful is for the following inequality to hold, where \(\alpha = p/q\) and \(\nu = \pi/2q\).</p>
+<p>Hofstadter does additional work and shows that a necessary condition for the solution to be physically meaningful is for the following inequality to hold, where \(\alpha = p/q\) and \(\nu = \pi/2q\):</p>
 <p>$$\left | \mathrm{Tr} \prod_{n=0}^q \begin{pmatrix} \epsilon - 2\cos(2\pi n \alpha - \nu) &amp; -1 \\ 1 &amp; 0\end{pmatrix} \right | \leq 4$$</p>
 <p>In code, define the matrix like so:</p>
 <pre><code>def A(ε, n, α, ν):
@@ -135,7 +135,7 @@ plt.show()
 <p><img src="hoffimg/0_1.png" alt="Simple Hofstadter butterfly, animated!" title="Simple Hofstadter butterfly, animated!" /></p>
 <p><a name="direct"></a></p>
 <h2>Directly calculate the eigenenergies <span class="sourcelink"><a href="hoffcode/part1.py">[source]</a></span></h2>
-<p>Rewrite the previous eigenvalue equation in matrix form with \(V_n=2\cos(2\pi n \alpha - \nu)\).</p>
+<p>Rewrite the previous eigenvalue equation in matrix form with \(V_n=2\cos(2\pi n \alpha - \nu)\):</p>
 <p>$$\begin{pmatrix}V_0 &amp; 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 &amp; 1\\ 1 &amp; V_1 &amp; 1 &amp; 0 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 1 &amp; V_2 &amp; 1 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 1 &amp; V_3 &amp; \cdots &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; V_{N-2} &amp; 1 \\ 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1 &amp; V_{N-1} \end{pmatrix}\begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1} \end{pmatrix}=\epsilon \begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1}\end{pmatrix}$$</p>
 <p>We can find the eigenvalues directly. It looks like a nasty matrix, but all but \(3N\) of its \(N^2\) elements are 0, so it's really not so bad. In the original equation, \(N\) is \(\infty\). My computer can't go quite that far, but it can go to a few thousand which is almost as good.</p>
 <pre><code>def Hamiltonian(N, α, ν):
@@ -185,7 +185,7 @@ plt.show()
 <p><img src="hoffimg/1_3.png" alt="Finite size 2." title="Finite size effects" /></p>
 <p><a name="lyapunov"></a></p>
 <h2>Lyapunov exponents <span class="sourcelink"><a href="hoffcode/part2.py">[source]</a></span></h2>
-<p>Again restrict ourselves to rational \(\alpha\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero.</p>
+<p>Again restrict ourselves to rational \(\alpha\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero:</p>
 <p>$$\log\left(\left | \det(H(\alpha) - \epsilon I)\right | \right) = 0$$</p>
 <p>Where \(H(\alpha)\) is a \(q{\times}q\) matrix with the same entries as the Hamiltonian from the last section, with \(\nu=0\).</p>
 <pre><code>outs = np.zeros((len(αs), len(εs)))
@@ -202,7 +202,7 @@ for i, (α, _, q) in enumerate(αs):
 <p>Very cool. We've lost the ability to directly measure the density of the gaps, but it does look really neat.</p>
 <p><a name="interacting"></a></p>
 <h2>Interacting butterflies <span class="sourcelink"><a href="hoffcode/part3_0.py">[source 1]</a></span> <span class="sourcelink"><a href="hoffcode/part3_1.py">[source 2]</a></span></h2>
-<p>Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions<a href="#fn5">[5]</a>. The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \(U\) when the particles are on the same site.</p>
+<p>Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions<a href="#fn5">[5]</a>. The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \(U\) when the particles are on the same site:</p>
 <p>$$\begin{multline}g_{n+1,m} + g_{n-1,m} + g_{n,m+1} + g_{n,m-1} \\ + \left[2\cos(2\pi\alpha n + \nu_n) + 2\cos(2\pi\alpha m + \nu_m) + U\delta_{n,m}\right]g_{n,m} = \epsilon g_{n,m}\end{multline}$$</p>
 <p>In practice I just set \(\nu_n=\nu_m=\nu\). Computing this is not much more difficult conceptually than before. The big problem is that the size of the Hamiltonian is now \(N^2{\times}N^2\). Finding eigenvalues and determinants of matricies tends to grow as \(n^3\) for an \(n{\times}n\) matrix, so you can see that this might be a problem.</p>
 <pre><code>def Hamiltonian(N, α, ν, U):
@@ -252,8 +252,9 @@ eigs = eigs.reshape((len(αs), len(νs) * k))
 </code></pre>
 <p>We have a few extra knobs to turn to make the calculation more efficient. I use <code>tol=1e-2</code> because I don't care about precision better than 0.01. I want the smallest negative eigenvalues, so I use <code>which='SA'</code>. Changing these options can greatly affect the speed and quality of the results.</p>
 <p><img src="hoffimg/3_1.png" alt="LL fits." title="LL fits." /></p>
-<p>The lines behind the data are an analytic formula from the paper. Solid grey is the undisturbed butterfly and dashed red is the energized butterfly. They're a pretty good fit.</p>
+<p>The lines behind the data are from an analytic formula from the paper:</p>
 <p>$$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\alpha^2\left[(2\nu_1+1)^2 + (2\nu_2+1)^2+2\right]/16$$</p>
+<p>Solid grey is the undisturbed butterfly (\(U=0)\) and dashed red is the energized butterfly (\(U=0.5\)). They're a pretty good fit.</p>
 <p><a name="refs"></a></p>
 <h2>References</h2>
 <p><a name="fn1">[1]: Hofstadter, Douglas R. (1976). &quot;Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields&quot;. <em>Physical Review B.</em> <strong>14</strong> (6): 2239–2249.</a></p>
@@ -266,4 +267,5 @@ eigs = eigs.reshape((len(αs), len(νs) * k))
 <ul>
 <li>Honeycomb lattice.</li>
 <li>Hall conductivity.</li>
+<li>Moiré patterns.</li>
 </ul>
