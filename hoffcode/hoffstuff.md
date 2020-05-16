@@ -1,5 +1,7 @@
 # Hofstadter's Butterfly
 
+<span id="attrib">*Written in May 2020 by [spxtr](https://github.com/spxtr). All of the code used to generate the figures is available on [GitHub](https://github.com/spxtr/spxtr.github.io). Feel free to open issues and pull requests.*</span>
+
 Crystals have a recurring lattice structure with periodicities of a few times \\(10^{-10}\\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity related to the strength of the field. In 1976, Douglas Hofstadter published a paper[[1]](#fn1) describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!
 
 1. [Background](#background)

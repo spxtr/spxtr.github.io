@@ -18,7 +18,7 @@ body {
     margin: 0 auto;
     max-width: 800px;
     line-height: 1.6;
-    font-size: 18px;
+    font-size: medium;
     color: #222;
     padding: 20px;
     font-family: 'Open Sans', sans-serif;
@@ -38,7 +38,7 @@ pre code {
     background-color: #ddd;
     display: block;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: small;
     font-family: 'Roboto Mono', monospace;
     overflow-x: auto;
 }
@@ -52,6 +52,9 @@ img {
 .MathJax {
     overflow-x: auto;
 }
+.attrib {
+    font-size: small;
+}
 .sourcelink {
     font-size: medium;
 }
@@ -59,6 +62,7 @@ img {
 <title>Hofstadter's Butterfly</title>
 <body>
 <h1>Hofstadter's Butterfly</h1>
+<p><span id="attrib"><em>Written in May 2020 by <a href="https://github.com/spxtr">spxtr</a>. All of the code used to generate the figures is available on <a href="https://github.com/spxtr/spxtr.github.io">GitHub</a>. Feel free to open issues and pull requests.</em></span></p>
 <p>Crystals have a recurring lattice structure with periodicities of a few times \(10^{-10}\) meters. In a magnetic field, electrons in the crystal will undergo cyclotron motion with a different periodicity related to the strength of the field. In 1976, Douglas Hofstadter published a paper<a href="#fn1">[1]</a> describing the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!</p>
 <ol>
 <li><a href="#background">Background</a></li>
