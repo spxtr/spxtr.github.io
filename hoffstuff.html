@@ -87,6 +87,7 @@ img {
 <pre><code>import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
+π = np.pi
 </code></pre>
 <p><a name="original"></a></p>
 <h2>Hofstadter's original method <span class="sourcelink"><a href="hoffcode/part0.py">[source]</a></span></h2>
@@ -96,7 +97,7 @@ import matplotlib.pyplot as plt
 <p>$$\left | \mathrm{Tr} \prod_{n=0}^q \begin{pmatrix} \epsilon - 2\cos(2\pi n \alpha - \nu) &amp; -1 \\ 1 &amp; 0\end{pmatrix} \right | \leq 4$$</p>
 <p>In code, define the matrix like so:</p>
 <pre><code>def A(ε, n, α, ν):
-    return np.array([[ε - 2*np.cos(2*np.pi*n*α - ν), -1], [1, 0]])
+    return np.array([[ε - 2*np.cos(2*π*n*α - ν), -1], [1, 0]])
 </code></pre>
 <p>We need a rational list of magnetic fields and energies to compute this trace at. The butterfly is symmetric above \(1/2\) so we can save computation time by only computing one half of it.</p>
 <pre><code>αs = []
@@ -112,7 +113,7 @@ for i, (_, p, q) in enumerate(αs):
     for j, ε in enumerate(εs):
         m = np.eye(2)
         for n in range(q):
-            m = A(ε, n, p/q, np.pi/2/q) @ m
+            m = A(ε, n, p/q, π/2/q) @ m
         trs[i, j] = np.abs(np.trace(m))
 </code></pre>
 <p>Finally, plot every point that has trace less than 4. If you rearrange this code such that there is a plot call for each point, the code will be much simpler but also extremely slow. That's why I filter the output before calling plot once.</p>
@@ -141,7 +142,7 @@ plt.show()
 <pre><code>def Hamiltonian(N, α, ν):
     H = np.zeros((N, N))
     for n in range(N):
-        H[n, n] = 2 * np.cos(2 * np.pi * n * α - ν)
+        H[n, n] = 2 * np.cos(2 * π * n * α - ν)
         H[(n + 1) % N, n] = 1
         H[(n - 1) % N, n] = 1
     return H
@@ -149,7 +150,7 @@ plt.show()
 <p>Now just calculate the eigenvalues for various different fields. We don't need to worry about rationality of the field, so let's just do evenly spaced fields.</p>
 <pre><code>N = 200
 αs = np.linspace(0.0, 0.5, 101)
-νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+νs = np.linspace(0, 2 * π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), N))
 for i, α in enumerate(αs):
@@ -213,7 +214,7 @@ for i, (α, _, q) in enumerate(αs):
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H
@@ -233,7 +234,7 @@ import scipy.sparse.linalg
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H.tocsr()
@@ -242,7 +243,7 @@ import scipy.sparse.linalg
 <pre><code>N = 200
 k = 10
 αs = np.linspace(0.0, 0.2, 41)
-νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+νs = np.linspace(0, 2 * π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), k))
 for i, α in enumerate(αs):

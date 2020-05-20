@@ -31,12 +31,13 @@ The set of \\(\epsilon\\) and \\(\alpha\\) that solve this equation make up the 
 
 For those who know what a Spirograph is, the rationality criterion is analogous to the fact that the Spirograph will eventually trace back over itself only if the ratio of the size of the wheels is rational.
 
-Anyway, enough talk. Time to code. I'm going to use Python because it's rad.
+Anyway, enough talk. Time to code. I'm going to use Python 3 because it's rad.
 
 ```
 import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
+π = np.pi
 ```
 
 <a name="original"></a>
@@ -54,7 +55,7 @@ In code, define the matrix like so:
 
 ```
 def A(ε, n, α, ν):
-    return np.array([[ε - 2*np.cos(2*np.pi*n*α - ν), -1], [1, 0]])
+    return np.array([[ε - 2*np.cos(2*π*n*α - ν), -1], [1, 0]])
 ```
 
 We need a rational list of magnetic fields and energies to compute this trace at. The butterfly is symmetric above \\(1/2\\) so we can save computation time by only computing one half of it.
@@ -76,7 +77,7 @@ for i, (_, p, q) in enumerate(αs):
     for j, ε in enumerate(εs):
         m = np.eye(2)
         for n in range(q):
-            m = A(ε, n, p/q, np.pi/2/q) @ m
+            m = A(ε, n, p/q, π/2/q) @ m
         trs[i, j] = np.abs(np.trace(m))
 ```
 
@@ -117,7 +118,7 @@ We can find the eigenvalues directly. It looks like a nasty matrix, but all but 
 def Hamiltonian(N, α, ν):
     H = np.zeros((N, N))
     for n in range(N):
-        H[n, n] = 2 * np.cos(2 * np.pi * n * α - ν)
+        H[n, n] = 2*np.cos(2*π*n*α - ν)
         H[(n + 1) % N, n] = 1
         H[(n - 1) % N, n] = 1
     return H
@@ -128,13 +129,13 @@ Now just calculate the eigenvalues for various different fields. We don't need t
 ```
 N = 200
 αs = np.linspace(0.0, 0.5, 101)
-νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+νs = np.linspace(0.0, 2*π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), N))
 for i, α in enumerate(αs):
     for j, ν in enumerate(νs):
         eigs[i, j, :] = linalg.eigvalsh(Hamiltonian(N, α, ν))
-eigs = eigs.reshape((len(αs), len(νs)*(N)))
+eigs = eigs.reshape((len(αs), len(νs)*N))
 ```
 
 And plot them.
@@ -195,7 +196,7 @@ Where \\(H(\alpha)\\) is a \\(q{\times}q\\) matrix with the same entries as the 
 outs = np.zeros((len(αs), len(εs)))
 for i, (α, _, q) in enumerate(αs):
     for j, ε in enumerate(εs):
-        m = Hamiltonian(q, α, 0) - ε * np.eye(q)
+        m = Hamiltonian(q, α, 0) - ε*np.eye(q)
         outs[i, j] = np.linalg.slogdet(m)[1] / q
 ```
 
@@ -229,7 +230,7 @@ def Hamiltonian(N, α, ν, U):
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H
@@ -257,7 +258,7 @@ def Hamiltonian(N, α, ν, U):
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H.tocsr()
@@ -269,7 +270,7 @@ Now calculate the eigenvalues. I'll look at \\(U=0.5\\).
 N = 200
 k = 10
 αs = np.linspace(0.0, 0.2, 41)
-νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+νs = np.linspace(0.0, 2*π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), k))
 for i, α in enumerate(αs):

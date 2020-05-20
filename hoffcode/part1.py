@@ -7,11 +7,13 @@ import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
 
+π = np.pi
+
 
 def Hamiltonian(N, α, ν):
     H = np.zeros((N, N))
     for i in range(N):
-        H[i, i] = 2 * np.cos(2 * np.pi * i * α - ν)
+        H[i, i] = 2 * np.cos(2 * π * i * α - ν)
         H[(i + 1) % N, i] = 1
         H[(i - 1) % N, i] = 1
     return H
@@ -62,14 +64,14 @@ def plot_gaps(eigs, N, αs, νs, outfile):
 if __name__ == '__main__':
     N = 200
     αs = np.linspace(0.0, 0.5, 101)
-    νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+    νs = np.linspace(0, 2 * π, 1, endpoint=False)
 
     eigs = calc_eigs(200, αs, νs)
     plot_butterfly(eigs, 'hoffimg/1_0.png')
     plot_gaps(eigs, 200, αs, νs, 'hoffimg/1_1.png')
 
     αs = np.linspace(0.0, 0.5, 201)
-    νs = np.linspace(0, 2 * np.pi, 20, endpoint=False)
+    νs = np.linspace(0, 2 * π, 20, endpoint=False)
     imgs = []
     for ν in νs:
         bio = io.BytesIO()

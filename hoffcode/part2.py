@@ -6,11 +6,13 @@ import apng
 import numpy as np
 import matplotlib.pyplot as plt
 
+π = np.pi
+
 
 def Hamiltonian(N, α, ν):
     H = np.zeros((N, N))
     for i in range(N):
-        H[i, i] = 2 * np.cos(2 * np.pi * i * α - ν)
+        H[i, i] = 2 * np.cos(2 * π * i * α - ν)
         H[(i + 1) % N, i] = 1
         H[(i - 1) % N, i] = 1
     return H

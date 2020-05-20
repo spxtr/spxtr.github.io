@@ -6,9 +6,11 @@ import apng
 import numpy as np
 import matplotlib.pyplot as plt
 
+π = np.pi
+
 
 def A(ε, m, α, ν):
-    return np.array([[ε - 2*np.cos(2*np.pi*m*α - ν), -1], [1, 0]])
+    return np.array([[ε - 2*np.cos(2*π*m*α - ν), -1], [1, 0]])
 
 
 def primes(n):
@@ -35,7 +37,7 @@ def plot_butterfly(qmax, outfile):
         for j, ε in enumerate(εs):
             m = np.eye(2)
             for k in range(q):
-                m = A(ε, k, p/q, np.pi/2/q) @ m
+                m = A(ε, k, p/q, π/2/q) @ m
             trs[i, j] = np.abs(np.trace(m))
 
 

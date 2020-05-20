@@ -8,6 +8,9 @@ import scipy.sparse
 import scipy.sparse.linalg
 import matplotlib.pyplot as plt
 
+π = np.pi
+
+
 def Hamiltonian(N, α, ν, U):
     H = scipy.sparse.lil_matrix((N*N, N*N))
     for n in range(N):
@@ -16,7 +19,7 @@ def Hamiltonian(N, α, ν, U):
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H.tocsr()
@@ -25,7 +28,7 @@ if __name__ == '__main__':
     N = 200
     k = 10
     αs = np.linspace(0.0, 0.2, 41)
-    νs = np.linspace(0, 2 * np.pi, 1, endpoint=False)
+    νs = np.linspace(0, 2 * π, 1, endpoint=False)
 
     eigs = np.zeros((len(αs), len(νs), k))
     for i, α in enumerate(αs):
@@ -40,7 +43,7 @@ if __name__ == '__main__':
     plt.ylabel('$\\alpha$')
     ys = np.linspace(0, 0.2, 101)
     def E(α, ν1, ν2, U):
-        return 8 - U*np.sqrt(α) - 4*np.pi*α*(ν1 + ν2 + 1) + 4*np.pi*np.pi*α*α*((2*ν1 + 1)**2 + (2*ν2 + 1)**2 + 2) / 16
+        return 8 - U*np.sqrt(α) - 4*π*α*(ν1 + ν2 + 1) + 4*π*π*α*α*((2*ν1 + 1)**2 + (2*ν2 + 1)**2 + 2) / 16
     plt.plot(-E(ys, 0, 0, 0), ys, 'grey')
     plt.plot(-E(ys, 0, 0, 0.5), ys, 'r--')
     plt.plot(-E(ys, 1, 0, 0), ys, 'grey')

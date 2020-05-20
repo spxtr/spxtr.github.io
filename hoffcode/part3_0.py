@@ -7,6 +7,8 @@ import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
 
+π = np.pi
+
 
 def Hamiltonian(N, α, ν, U):
     H = np.zeros((N*N, N*N))
@@ -16,7 +18,7 @@ def Hamiltonian(N, α, ν, U):
             H[(n*N + m - 1) % (N*N), n*N + m] = 1
             H[((n + 1)*N + m) % (N*N), n*N + m] = 1
             H[((n - 1)*N + m) % (N*N), n*N + m] = 1
-            H[n*N + m, n*N + m] = 2*np.cos(2*np.pi*n*α - ν) + 2*np.cos(2*np.pi*m*α - ν)
+            H[n*N + m, n*N + m] = 2*np.cos(2*π*n*α - ν) + 2*np.cos(2*π*m*α - ν)
     for n in range(N):
         H[n*N + n, n*N + n] += U
     return H
@@ -34,7 +36,7 @@ if __name__ == '__main__':
     resν = 1
 
     αs = np.linspace(0.0, 0.5, resα)
-    νs = np.linspace(0, 2 * np.pi, resν, endpoint=False)
+    νs = np.linspace(0, 2 * π, resν, endpoint=False)
 
     imgs = []
     for U in np.linspace(0, 10, 21):
