@@ -9,6 +9,7 @@ Crystals have a recurring lattice structure with periodicities of a few times \\
 1. [Direct eigenenergy calculation](#direct)
 1. [Lyapunov exponent](#lyapunov)
 1. [Interacting butterflies](#interacting)
+1. [Moiré patterns](#moire)
 1. [References](#refs)
 1. [TODO](#todo)
 
@@ -289,6 +290,54 @@ $$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\
 
 Solid grey is the undisturbed butterfly (\\(U=0)\\) and dashed red is the energized butterfly (\\(U=0.5\\)). They're a pretty good fit.
 
+<a name="moire"></a>
+## Moiré patterns <span class="sourcelink">[[source]](hoffcode/part4.py)</span>
+
+Reaching \\(\alpha=1\\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.
+
+First, let's compute a honeycomb lattice.
+
+```
+def triangular(N):
+    xs, ys = [], []
+    for x in range(N):
+        for y in range(N):
+            xs.append(x)
+            xs.append(x + 0.5)
+            ys.append(np.sqrt(3) * y)
+            ys.append(np.sqrt(3) * (y + 0.5))
+    return np.array(xs), np.array(ys)
+
+def honeycomb(N):
+    xs, ys = triangular(N)
+    return np.concatenate((xs, xs + 0.5)), np.concatenate((ys, ys + np.sqrt(3)/6))
+```
+
+You can see below that a honeycomb is two triangular lattices offset from one another.
+
+![Honeycomb lattice.](hoffimg/4_0.png "Honeycomb lattice.")
+
+When two crystal lattices with slightly different sizes are laid on top of one another, a moiré pattern appears. In this graphic I'm varying the size between \\(1.01\\) and \\(1.1\\). For more similar sizes, the moiré pattern is larger.
+
+![Honeycomb lattices with different sizes.](hoffimg/4_1.png "Honeycomb lattices with different sizes.")
+
+Graphene is an excellent 2D conductor, and can be placed on top of hexagonal boron nitride, an insulator. They are both honeycomb lattices with lattice constants only a couple percent off. The moiré pattern that appears when they are aligned is big enough that to reach \\(\alpha=1\\) requires magnetic fields in the tens of teslas.
+
+If you take two of the same lattice and rotate them with respect to one another, a similar thing happens.
+
+```
+def rotate(xs, ys, θ):
+    cos = np.cos(θ)
+    sin = np.sin(θ)
+    return cos*xs - sin*ys, sin*xs + cos*ys
+```
+
+Here I am rotating between \\(0\\) and \\(\pi/3\\):
+
+![Honeycomb lattices rotating.](hoffimg/4_2.png "Honeycomb lattices rotating.")
+
+Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.
+
 <a name="refs"></a>
 ## References
 
@@ -307,4 +356,3 @@ Solid grey is the undisturbed butterfly (\\(U=0)\\) and dashed red is the energi
 
 * Honeycomb lattice.
 * Hall conductivity.
-* Moiré patterns.

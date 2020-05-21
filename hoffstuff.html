@@ -70,6 +70,7 @@ img {
 <li><a href="#direct">Direct eigenenergy calculation</a></li>
 <li><a href="#lyapunov">Lyapunov exponent</a></li>
 <li><a href="#interacting">Interacting butterflies</a></li>
+<li><a href="#moire">Moiré patterns</a></li>
 <li><a href="#refs">References</a></li>
 <li><a href="#todo">TODO</a></li>
 </ol>
@@ -83,7 +84,7 @@ img {
 <p>\(\nu\) is a phase that can take values between \(0\) and \(2\pi\).</p>
 <p>The set of \(\epsilon\) and \(\alpha\) that solve this equation make up the butterfly. The strange result is that the solutions seem to depend on the rationality of \(\alpha\). Specifically, if \(\alpha = p/q\) for integers \(p\) and \(q\), then there will be \(q\) intervals of energy that solve the problem. This is unusual because we can continuously tune magnetic field. A tiny change in field may lead to an enormous change in \(q\).</p>
 <p>For those who know what a Spirograph is, the rationality criterion is analogous to the fact that the Spirograph will eventually trace back over itself only if the ratio of the size of the wheels is rational.</p>
-<p>Anyway, enough talk. Time to code. I'm going to use Python because it's rad.</p>
+<p>Anyway, enough talk. Time to code. I'm going to use Python 3 because it's rad.</p>
 <pre><code>import numpy as np
 from scipy import linalg
 import matplotlib.pyplot as plt
@@ -142,7 +143,7 @@ plt.show()
 <pre><code>def Hamiltonian(N, α, ν):
     H = np.zeros((N, N))
     for n in range(N):
-        H[n, n] = 2 * np.cos(2 * π * n * α - ν)
+        H[n, n] = 2*np.cos(2*π*n*α - ν)
         H[(n + 1) % N, n] = 1
         H[(n - 1) % N, n] = 1
     return H
@@ -150,13 +151,13 @@ plt.show()
 <p>Now just calculate the eigenvalues for various different fields. We don't need to worry about rationality of the field, so let's just do evenly spaced fields.</p>
 <pre><code>N = 200
 αs = np.linspace(0.0, 0.5, 101)
-νs = np.linspace(0, 2 * π, 1, endpoint=False)
+νs = np.linspace(0.0, 2*π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), N))
 for i, α in enumerate(αs):
     for j, ν in enumerate(νs):
         eigs[i, j, :] = linalg.eigvalsh(Hamiltonian(N, α, ν))
-eigs = eigs.reshape((len(αs), len(νs)*(N)))
+eigs = eigs.reshape((len(αs), len(νs)*N))
 </code></pre>
 <p>And plot them.</p>
 <pre><code>plt.figure(figsize=(6, 4))
@@ -192,7 +193,7 @@ plt.show()
 <pre><code>outs = np.zeros((len(αs), len(εs)))
 for i, (α, _, q) in enumerate(αs):
     for j, ε in enumerate(εs):
-        m = Hamiltonian(q, α, 0) - ε * np.eye(q)
+        m = Hamiltonian(q, α, 0) - ε*np.eye(q)
         outs[i, j] = np.linalg.slogdet(m)[1] / q
 </code></pre>
 <p>It turns out there's a function in numpy that computes the logarithm of the absolute value of the determinant of a matrix for you. This can be valuable if the determinant is likely to overflow, which happens in our case for large \(q\).</p>
@@ -243,7 +244,7 @@ import scipy.sparse.linalg
 <pre><code>N = 200
 k = 10
 αs = np.linspace(0.0, 0.2, 41)
-νs = np.linspace(0, 2 * π, 1, endpoint=False)
+νs = np.linspace(0.0, 2*π, 1, endpoint=False)
 
 eigs = np.zeros((len(αs), len(νs), k))
 for i, α in enumerate(αs):
@@ -256,6 +257,38 @@ eigs = eigs.reshape((len(αs), len(νs) * k))
 <p>The lines behind the data are from an analytic formula from the paper:</p>
 <p>$$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\alpha^2\left[(2\nu_1+1)^2 + (2\nu_2+1)^2+2\right]/16$$</p>
 <p>Solid grey is the undisturbed butterfly (\(U=0)\) and dashed red is the energized butterfly (\(U=0.5\)). They're a pretty good fit.</p>
+<p><a name="moire"></a></p>
+<h2>Moiré patterns <span class="sourcelink"><a href="hoffcode/part4.py">[source]</a></span></h2>
+<p>Reaching \(\alpha=1\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.</p>
+<p>First, let's compute a honeycomb lattice.</p>
+<pre><code>def triangular(N):
+    xs, ys = [], []
+    for x in range(N):
+        for y in range(N):
+            xs.append(x)
+            xs.append(x + 0.5)
+            ys.append(np.sqrt(3) * y)
+            ys.append(np.sqrt(3) * (y + 0.5))
+    return np.array(xs), np.array(ys)
+
+def honeycomb(N):
+    xs, ys = triangular(N)
+    return np.concatenate((xs, xs + 0.5)), np.concatenate((ys, ys + np.sqrt(3)/6))
+</code></pre>
+<p>You can see below that a honeycomb is two triangular lattices offset from one another.</p>
+<p><img src="hoffimg/4_0.png" alt="Honeycomb lattice." title="Honeycomb lattice." /></p>
+<p>When two crystal lattices with slightly different sizes are laid on top of one another, a moiré pattern appears. In this graphic I'm varying the size between \(1.01\) and \(1.1\). For more similar sizes, the moiré pattern is larger.</p>
+<p><img src="hoffimg/4_1.png" alt="Honeycomb lattices with different sizes." title="Honeycomb lattices with different sizes." /></p>
+<p>Graphene is an excellent 2D conductor, and can be placed on top of hexagonal boron nitride, an insulator. They are both honeycomb lattices with lattice constants only a couple percent off. The moiré pattern that appears when they are aligned is big enough that to reach \(\alpha=1\) requires magnetic fields in the tens of teslas.</p>
+<p>If you take two of the same lattice and rotate them with respect to one another, a similar thing happens.</p>
+<pre><code>def rotate(xs, ys, θ):
+    cos = np.cos(θ)
+    sin = np.sin(θ)
+    return cos*xs - sin*ys, sin*xs + cos*ys
+</code></pre>
+<p>Here I am rotating between \(0\) and \(\pi/3\):</p>
+<p><img src="hoffimg/4_2.png" alt="Honeycomb lattices rotating." title="Honeycomb lattices rotating." /></p>
+<p>Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.</p>
 <p><a name="refs"></a></p>
 <h2>References</h2>
 <p><a name="fn1">[1]: Hofstadter, Douglas R. (1976). &quot;Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields&quot;. <em>Physical Review B.</em> <strong>14</strong> (6): 2239–2249.</a></p>
