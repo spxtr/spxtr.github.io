@@ -13,7 +13,7 @@ Crystals have a recurring lattice structure with periodicities of a few times \\
 1. [References](#refs)
 1. [TODO](#todo)
 
-<a name="background"></a>
+<a id="background"></a>
 ## Background
 
 The symbol \\(\alpha\\) represents the ratio of the magnetic flux through a lattice cell (\\(a^2 B\\) for a square lattice of side length \\(a\\)) to the magnetic flux quantum \\(h/e\\):
@@ -41,7 +41,7 @@ import matplotlib.pyplot as plt
 π = np.pi
 ```
 
-<a name="original"></a>
+<a id="original"></a>
 ## Hofstadter's original method <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part0.py)</span>
 
 The eigenvalue equation can be recast in the following form:
@@ -106,7 +106,7 @@ Not bad! There are a few problems though. First, to get a better picture I'll ne
 
 ![Simple Hofstadter butterfly, animated!](hoffimg/0_1.png "Simple Hofstadter butterfly, animated!")
 
-<a name="direct"></a>
+<a id="direct"></a>
 ## Directly calculate the eigenenergies <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part1.py)</span>
 
 Rewrite the previous eigenvalue equation in matrix form with \\(V_n=2\cos(2\pi n \alpha - \nu)\\):
@@ -184,7 +184,7 @@ I think it's cool that you can still see the butterfly in very small lattices. H
 
 ![Finite size 2.](hoffimg/1_3.png "Finite size effects")
 
-<a name="lyapunov"></a>
+<a id="lyapunov"></a>
 ## Lyapunov exponents <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part2.py)</span>
 
 Again restrict ourselves to rational \\(\alpha\\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero:
@@ -213,7 +213,7 @@ Note that due to finite resolution in energy and a sizable background signal, ma
 
 Very cool. We've lost the ability to directly measure the density of the gaps, but it does look really neat.
 
-<a name="interacting"></a>
+<a id="interacting"></a>
 ## Interacting butterflies <span class="sourcelink">[[source 1]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_0.py)</span> <span class="sourcelink">[[source 2]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_1.py)</span>
 
 Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions[[5]](#fn5). The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \\(U\\) when the particles are on the same site:
@@ -290,7 +290,7 @@ $$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\
 
 Solid grey is the undisturbed butterfly (\\(U=0)\\) and dashed red is the energized butterfly (\\(U=0.5\\)). They're a pretty good fit.
 
-<a name="moire"></a>
+<a id="moire"></a>
 ## Moiré patterns <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part4.py)</span>
 
 Reaching \\(\alpha=1\\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.
@@ -338,21 +338,22 @@ Here I am rotating between \\(0\\) and \\(\pi/3\\):
 
 Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.
 
-<a name="refs"></a>
+<a id="refs"></a>
 ## References
 
-<a name="fn1">[1]: Hofstadter, Douglas R. (1976). "Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields". *Physical Review B.* **14** (6): 2239–2249.</a>
+<a id="fn1">[1]: Hofstadter, Douglas R. (1976). "Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields". *Physical Review B.* **14** (6): 2239–2249.</a>
 
-<a name="fn2">[2]: Wannier, G. H. (1978). "A Result Not Dependent on Rationality for Bloch Electrons in a Magnetic Field". *Physica Status Solidi (b)*, **88** (2): 757-765.</a>
+<a id="fn2">[2]: Wannier, G. H. (1978). "A Result Not Dependent on Rationality for Bloch Electrons in a Magnetic Field". *Physica Status Solidi (b)*, **88** (2): 757-765.</a>
 
-<a name="fn3">[3]: Hunt, B.; Sanchez-Yamagishi, J. D.; Young, A. F.; Yankowitz, M.; LeRoy, B. J.; Watanabe, K.; Taniguchi, T.; Moon, P.; Koshino, M.; Jarillo-Herrero, P.; Ashoori, R. C. (2013). "Massive Dirac fermions and Hofstadter butterfly in a van der Waals heterostructure". *Science.* **340** (6139): 1427–1430.</a>
+<a id="fn3">[3]: Hunt, B.; Sanchez-Yamagishi, J. D.; Young, A. F.; Yankowitz, M.; LeRoy, B. J.; Watanabe, K.; Taniguchi, T.; Moon, P.; Koshino, M.; Jarillo-Herrero, P.; Ashoori, R. C. (2013). "Massive Dirac fermions and Hofstadter butterfly in a van der Waals heterostructure". *Science.* **340** (6139): 1427–1430.</a>
 
-<a name="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). "Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices". *Nature.* **497** (7451): 598–602.</a>
+<a id="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). "Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices". *Nature.* **497** (7451): 598–602.</a>
 
-<a name="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). "Two interacting Hofstadter butterflies". *Phys. Rev. B* **55**: 9524-9533.</a>
+<a id="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). "Two interacting Hofstadter butterflies". *Phys. Rev. B* **55**: 9524-9533.</a>
 
-<a name="todo"></a>
+<a id="todo"></a>
 ## TODO
 
 * Honeycomb lattice.
 * Hall conductivity.
+* Edge states and wavefunctions.

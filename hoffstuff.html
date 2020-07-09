@@ -1,4 +1,5 @@
-<head>
+<!DOCTYPE html>
+<head lang="en">
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-166819915-1"></script>
 <script>
@@ -9,7 +10,7 @@
   gtag('config', 'UA-166819915-1');
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto+Mono&display=swap" rel="stylesheet">
 <style>
@@ -74,7 +75,7 @@ img {
 <li><a href="#refs">References</a></li>
 <li><a href="#todo">TODO</a></li>
 </ol>
-<p><a name="background"></a></p>
+<p><a id="background"></a></p>
 <h2>Background</h2>
 <p>The symbol \(\alpha\) represents the ratio of the magnetic flux through a lattice cell (\(a^2 B\) for a square lattice of side length \(a\)) to the magnetic flux quantum \(h/e\):</p>
 <p>$$\alpha = a^2 B / (h/e)$$</p>
@@ -90,7 +91,7 @@ from scipy import linalg
 import matplotlib.pyplot as plt
 π = np.pi
 </code></pre>
-<p><a name="original"></a></p>
+<p><a id="original"></a></p>
 <h2>Hofstadter's original method <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part0.py">[source]</a></span></h2>
 <p>The eigenvalue equation can be recast in the following form:</p>
 <p>$$\begin{pmatrix} g_{n+1} \\ g_n \end{pmatrix} = \begin{pmatrix}\epsilon - 2\cos(2\pi n\alpha-\nu) &amp; -1 \\ 1 &amp; 0\end{pmatrix}\begin{pmatrix} g_n \\ g_{n-1} \end{pmatrix}$$</p>
@@ -135,7 +136,7 @@ plt.show()
 <p><img src="hoffimg/0_0.png" alt="Simple Hofstadter butterfly." title="Simple Hofstadter butterfly" /></p>
 <p>Not bad! There are a few problems though. First, to get a better picture I'll need to go to higher \(q\) and finer \(\epsilon\). That gets slow fast, since the runtime depends linearly on the resolution in \(\epsilon\) and quadratically on \(q\). The actual traces can be very sharp in energy, which means that if my energy spacing isn't fine enough then I will miss solutions. This is especially noticable at the corners and edges of the butterfly. By going up to \(q=29\) I get a nicer image, but it's still not exactly perfect.</p>
 <p><img src="hoffimg/0_1.png" alt="Simple Hofstadter butterfly, animated!" title="Simple Hofstadter butterfly, animated!" /></p>
-<p><a name="direct"></a></p>
+<p><a id="direct"></a></p>
 <h2>Directly calculate the eigenenergies <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part1.py">[source]</a></span></h2>
 <p>Rewrite the previous eigenvalue equation in matrix form with \(V_n=2\cos(2\pi n \alpha - \nu)\):</p>
 <p>$$\begin{pmatrix}V_0 &amp; 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 &amp; 1\\ 1 &amp; V_1 &amp; 1 &amp; 0 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 1 &amp; V_2 &amp; 1 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 1 &amp; V_3 &amp; \cdots &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; V_{N-2} &amp; 1 \\ 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1 &amp; V_{N-1} \end{pmatrix}\begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1} \end{pmatrix}=\epsilon \begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1}\end{pmatrix}$$</p>
@@ -185,7 +186,7 @@ plt.show()
 <p><img src="hoffimg/1_2.png" alt="Finite size effects." title="Finite size effects" /></p>
 <p>I think it's cool that you can still see the butterfly in very small lattices. Here I've set size to 10 and I'm sweeping \(\nu\) between \(0\) and \(2\pi\).</p>
 <p><img src="hoffimg/1_3.png" alt="Finite size 2." title="Finite size effects" /></p>
-<p><a name="lyapunov"></a></p>
+<p><a id="lyapunov"></a></p>
 <h2>Lyapunov exponents <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part2.py">[source]</a></span></h2>
 <p>Again restrict ourselves to rational \(\alpha\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero:</p>
 <p>$$\log\left(\left | \det(H(\alpha) - \epsilon I)\right | \right) = 0$$</p>
@@ -202,7 +203,7 @@ for i, (α, _, q) in enumerate(αs):
 <p>Note that due to finite resolution in energy and a sizable background signal, many of the levels don't quite reach 0. Lets just ignore that and plot it with pcolormesh. The Spectral colormap is the best, and you can get a sense for the scale from the line cuts above.</p>
 <p><img src="hoffimg/2_1.png" alt="Butterfly take 3." title="Butterfly take 3." /></p>
 <p>Very cool. We've lost the ability to directly measure the density of the gaps, but it does look really neat.</p>
-<p><a name="interacting"></a></p>
+<p><a id="interacting"></a></p>
 <h2>Interacting butterflies <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_0.py">[source 1]</a></span> <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_1.py">[source 2]</a></span></h2>
 <p>Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions<a href="#fn5">[5]</a>. The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \(U\) when the particles are on the same site:</p>
 <p>$$\begin{multline}g_{n+1,m} + g_{n-1,m} + g_{n,m+1} + g_{n,m-1} \\ + \left[2\cos(2\pi\alpha n + \nu_n) + 2\cos(2\pi\alpha m + \nu_m) + U\delta_{n,m}\right]g_{n,m} = \epsilon g_{n,m}\end{multline}$$</p>
@@ -257,7 +258,7 @@ eigs = eigs.reshape((len(αs), len(νs) * k))
 <p>The lines behind the data are from an analytic formula from the paper:</p>
 <p>$$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\alpha^2\left[(2\nu_1+1)^2 + (2\nu_2+1)^2+2\right]/16$$</p>
 <p>Solid grey is the undisturbed butterfly (\(U=0)\) and dashed red is the energized butterfly (\(U=0.5\)). They're a pretty good fit.</p>
-<p><a name="moire"></a></p>
+<p><a id="moire"></a></p>
 <h2>Moiré patterns <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part4.py">[source]</a></span></h2>
 <p>Reaching \(\alpha=1\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.</p>
 <p>First, let's compute a honeycomb lattice.</p>
@@ -289,16 +290,17 @@ def honeycomb(N):
 <p>Here I am rotating between \(0\) and \(\pi/3\):</p>
 <p><img src="hoffimg/4_2.png" alt="Honeycomb lattices rotating." title="Honeycomb lattices rotating." /></p>
 <p>Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.</p>
-<p><a name="refs"></a></p>
+<p><a id="refs"></a></p>
 <h2>References</h2>
-<p><a name="fn1">[1]: Hofstadter, Douglas R. (1976). &quot;Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields&quot;. <em>Physical Review B.</em> <strong>14</strong> (6): 2239–2249.</a></p>
-<p><a name="fn2">[2]: Wannier, G. H. (1978). &quot;A Result Not Dependent on Rationality for Bloch Electrons in a Magnetic Field&quot;. <em>Physica Status Solidi (b)</em>, <strong>88</strong> (2): 757-765.</a></p>
-<p><a name="fn3">[3]: Hunt, B.; Sanchez-Yamagishi, J. D.; Young, A. F.; Yankowitz, M.; LeRoy, B. J.; Watanabe, K.; Taniguchi, T.; Moon, P.; Koshino, M.; Jarillo-Herrero, P.; Ashoori, R. C. (2013). &quot;Massive Dirac fermions and Hofstadter butterfly in a van der Waals heterostructure&quot;. <em>Science.</em> <strong>340</strong> (6139): 1427–1430.</a></p>
-<p><a name="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). &quot;Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices&quot;. <em>Nature.</em> <strong>497</strong> (7451): 598–602.</a></p>
-<p><a name="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). &quot;Two interacting Hofstadter butterflies&quot;. <em>Phys. Rev. B</em> <strong>55</strong>: 9524-9533.</a></p>
-<p><a name="todo"></a></p>
+<p><a id="fn1">[1]: Hofstadter, Douglas R. (1976). &quot;Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields&quot;. <em>Physical Review B.</em> <strong>14</strong> (6): 2239–2249.</a></p>
+<p><a id="fn2">[2]: Wannier, G. H. (1978). &quot;A Result Not Dependent on Rationality for Bloch Electrons in a Magnetic Field&quot;. <em>Physica Status Solidi (b)</em>, <strong>88</strong> (2): 757-765.</a></p>
+<p><a id="fn3">[3]: Hunt, B.; Sanchez-Yamagishi, J. D.; Young, A. F.; Yankowitz, M.; LeRoy, B. J.; Watanabe, K.; Taniguchi, T.; Moon, P.; Koshino, M.; Jarillo-Herrero, P.; Ashoori, R. C. (2013). &quot;Massive Dirac fermions and Hofstadter butterfly in a van der Waals heterostructure&quot;. <em>Science.</em> <strong>340</strong> (6139): 1427–1430.</a></p>
+<p><a id="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). &quot;Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices&quot;. <em>Nature.</em> <strong>497</strong> (7451): 598–602.</a></p>
+<p><a id="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). &quot;Two interacting Hofstadter butterflies&quot;. <em>Phys. Rev. B</em> <strong>55</strong>: 9524-9533.</a></p>
+<p><a id="todo"></a></p>
 <h2>TODO</h2>
 <ul>
 <li>Honeycomb lattice.</li>
 <li>Hall conductivity.</li>
+<li>Edge states and wavefunctions.</li>
 </ul>
