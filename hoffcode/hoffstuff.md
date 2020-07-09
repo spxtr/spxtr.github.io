@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 ```
 
 <a name="original"></a>
-## Hofstadter's original method <span class="sourcelink">[[source]](hoffcode/part0.py)</span>
+## Hofstadter's original method <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part0.py)</span>
 
 The eigenvalue equation can be recast in the following form:
 
@@ -107,7 +107,7 @@ Not bad! There are a few problems though. First, to get a better picture I'll ne
 ![Simple Hofstadter butterfly, animated!](hoffimg/0_1.png "Simple Hofstadter butterfly, animated!")
 
 <a name="direct"></a>
-## Directly calculate the eigenenergies <span class="sourcelink">[[source]](hoffcode/part1.py)</span>
+## Directly calculate the eigenenergies <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part1.py)</span>
 
 Rewrite the previous eigenvalue equation in matrix form with \\(V_n=2\cos(2\pi n \alpha - \nu)\\):
 
@@ -185,7 +185,7 @@ I think it's cool that you can still see the butterfly in very small lattices. H
 ![Finite size 2.](hoffimg/1_3.png "Finite size effects")
 
 <a name="lyapunov"></a>
-## Lyapunov exponents <span class="sourcelink">[[source]](hoffcode/part2.py)</span>
+## Lyapunov exponents <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part2.py)</span>
 
 Again restrict ourselves to rational \\(\alpha\\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero:
 
@@ -214,7 +214,7 @@ Note that due to finite resolution in energy and a sizable background signal, ma
 Very cool. We've lost the ability to directly measure the density of the gaps, but it does look really neat.
 
 <a name="interacting"></a>
-## Interacting butterflies <span class="sourcelink">[[source 1]](hoffcode/part3_0.py)</span> <span class="sourcelink">[[source 2]](hoffcode/part3_1.py)</span>
+## Interacting butterflies <span class="sourcelink">[[source 1]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_0.py)</span> <span class="sourcelink">[[source 2]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_1.py)</span>
 
 Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions[[5]](#fn5). The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \\(U\\) when the particles are on the same site:
 
@@ -291,7 +291,7 @@ $$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\
 Solid grey is the undisturbed butterfly (\\(U=0)\\) and dashed red is the energized butterfly (\\(U=0.5\\)). They're a pretty good fit.
 
 <a name="moire"></a>
-## Moiré patterns <span class="sourcelink">[[source]](hoffcode/part4.py)</span>
+## Moiré patterns <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part4.py)</span>
 
 Reaching \\(\alpha=1\\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.
 

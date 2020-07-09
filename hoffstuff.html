@@ -91,7 +91,7 @@ import matplotlib.pyplot as plt
 π = np.pi
 </code></pre>
 <p><a name="original"></a></p>
-<h2>Hofstadter's original method <span class="sourcelink"><a href="hoffcode/part0.py">[source]</a></span></h2>
+<h2>Hofstadter's original method <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part0.py">[source]</a></span></h2>
 <p>The eigenvalue equation can be recast in the following form:</p>
 <p>$$\begin{pmatrix} g_{n+1} \\ g_n \end{pmatrix} = \begin{pmatrix}\epsilon - 2\cos(2\pi n\alpha-\nu) &amp; -1 \\ 1 &amp; 0\end{pmatrix}\begin{pmatrix} g_n \\ g_{n-1} \end{pmatrix}$$</p>
 <p>Hofstadter does additional work and shows that a necessary condition for the solution to be physically meaningful is for the following inequality to hold, where \(\alpha = p/q\) and \(\nu = \pi/2q\):</p>
@@ -136,7 +136,7 @@ plt.show()
 <p>Not bad! There are a few problems though. First, to get a better picture I'll need to go to higher \(q\) and finer \(\epsilon\). That gets slow fast, since the runtime depends linearly on the resolution in \(\epsilon\) and quadratically on \(q\). The actual traces can be very sharp in energy, which means that if my energy spacing isn't fine enough then I will miss solutions. This is especially noticable at the corners and edges of the butterfly. By going up to \(q=29\) I get a nicer image, but it's still not exactly perfect.</p>
 <p><img src="hoffimg/0_1.png" alt="Simple Hofstadter butterfly, animated!" title="Simple Hofstadter butterfly, animated!" /></p>
 <p><a name="direct"></a></p>
-<h2>Directly calculate the eigenenergies <span class="sourcelink"><a href="hoffcode/part1.py">[source]</a></span></h2>
+<h2>Directly calculate the eigenenergies <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part1.py">[source]</a></span></h2>
 <p>Rewrite the previous eigenvalue equation in matrix form with \(V_n=2\cos(2\pi n \alpha - \nu)\):</p>
 <p>$$\begin{pmatrix}V_0 &amp; 1 &amp; 0 &amp; 0 &amp; \cdots &amp; 0 &amp; 1\\ 1 &amp; V_1 &amp; 1 &amp; 0 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 1 &amp; V_2 &amp; 1 &amp; \cdots &amp; 0 &amp; 0\\ 0 &amp; 0 &amp; 1 &amp; V_3 &amp; \cdots &amp; 0 &amp; 0 \\ \vdots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots \\ 0 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; V_{N-2} &amp; 1 \\ 1 &amp; 0 &amp; 0 &amp; 0 &amp; \cdots &amp; 1 &amp; V_{N-1} \end{pmatrix}\begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1} \end{pmatrix}=\epsilon \begin{pmatrix}g_0 \\ g_1 \\ g_2 \\ g_3 \\ \vdots \\ g_{N-2} \\ g_{N-1}\end{pmatrix}$$</p>
 <p>We can find the eigenvalues directly. It looks like a nasty matrix, but all but \(3N\) of its \(N^2\) elements are 0, so it's really not so bad. In the original equation, \(N\) is \(\infty\). My computer can't go quite that far, but it can go to a few thousand which is almost as good.</p>
@@ -186,7 +186,7 @@ plt.show()
 <p>I think it's cool that you can still see the butterfly in very small lattices. Here I've set size to 10 and I'm sweeping \(\nu\) between \(0\) and \(2\pi\).</p>
 <p><img src="hoffimg/1_3.png" alt="Finite size 2." title="Finite size effects" /></p>
 <p><a name="lyapunov"></a></p>
-<h2>Lyapunov exponents <span class="sourcelink"><a href="hoffcode/part2.py">[source]</a></span></h2>
+<h2>Lyapunov exponents <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part2.py">[source]</a></span></h2>
 <p>Again restrict ourselves to rational \(\alpha\) as in the first part. Another way to formulate the butterfly is the set of energies where this particular Lyapunov exponent is zero:</p>
 <p>$$\log\left(\left | \det(H(\alpha) - \epsilon I)\right | \right) = 0$$</p>
 <p>Where \(H(\alpha)\) is a \(q{\times}q\) matrix with the same entries as the Hamiltonian from the last section, with \(\nu=0\).</p>
@@ -203,7 +203,7 @@ for i, (α, _, q) in enumerate(αs):
 <p><img src="hoffimg/2_1.png" alt="Butterfly take 3." title="Butterfly take 3." /></p>
 <p>Very cool. We've lost the ability to directly measure the density of the gaps, but it does look really neat.</p>
 <p><a name="interacting"></a></p>
-<h2>Interacting butterflies <span class="sourcelink"><a href="hoffcode/part3_0.py">[source 1]</a></span> <span class="sourcelink"><a href="hoffcode/part3_1.py">[source 2]</a></span></h2>
+<h2>Interacting butterflies <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_0.py">[source 1]</a></span> <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part3_1.py">[source 2]</a></span></h2>
 <p>Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions<a href="#fn5">[5]</a>. The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \(U\) when the particles are on the same site:</p>
 <p>$$\begin{multline}g_{n+1,m} + g_{n-1,m} + g_{n,m+1} + g_{n,m-1} \\ + \left[2\cos(2\pi\alpha n + \nu_n) + 2\cos(2\pi\alpha m + \nu_m) + U\delta_{n,m}\right]g_{n,m} = \epsilon g_{n,m}\end{multline}$$</p>
 <p>In practice I just set \(\nu_n=\nu_m=\nu\). Computing this is not much more difficult conceptually than before. The big problem is that the size of the Hamiltonian is now \(N^2{\times}N^2\). Finding eigenvalues and determinants of matricies tends to grow as \(n^3\) for an \(n{\times}n\) matrix, so you can see that this might be a problem.</p>
@@ -258,7 +258,7 @@ eigs = eigs.reshape((len(αs), len(νs) * k))
 <p>$$E_{\nu_1,\nu_2}(\alpha)=8 + U\sqrt{\alpha} - 4\pi\alpha(\nu_1+\nu_2+1)+4\pi^2\alpha^2\left[(2\nu_1+1)^2 + (2\nu_2+1)^2+2\right]/16$$</p>
 <p>Solid grey is the undisturbed butterfly (\(U=0)\) and dashed red is the energized butterfly (\(U=0.5\)). They're a pretty good fit.</p>
 <p><a name="moire"></a></p>
-<h2>Moiré patterns <span class="sourcelink"><a href="hoffcode/part4.py">[source]</a></span></h2>
+<h2>Moiré patterns <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part4.py">[source]</a></span></h2>
 <p>Reaching \(\alpha=1\) in an ordinary crystal requires magnetic fields in the thousands of teslas. This is not feasible with current technology, which can go up to about a hundred tesla before things start blowing up. Fortunately, we can make very large, very clean crystals with a neat trick.</p>
 <p>First, let's compute a honeycomb lattice.</p>
 <pre><code>def triangular(N):
@@ -301,5 +301,4 @@ def honeycomb(N):
 <ul>
 <li>Honeycomb lattice.</li>
 <li>Hall conductivity.</li>
-<li>Moiré patterns.</li>
 </ul>
