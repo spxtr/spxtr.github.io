@@ -218,7 +218,7 @@ Very cool. We've lost the ability to directly measure the density of the gaps, b
 
 Because one wasn't enough, a French group decided to add a second particle along with a simple model for interactions[[5]](#fn5). The eigenvalue equation is similar to the single-particle case, only now we have to track two indices rather than one. There's also an additional term that adds an interaction energy \\(U\\) when the particles are on the same site:
 
-$$\begin{multline}g_{n+1,m} + g_{n-1,m} + g_{n,m+1} + g_{n,m-1} \\\\ + \left[2\cos(2\pi\alpha n + \nu_n) + 2\cos(2\pi\alpha m + \nu_m) + U\delta_{n,m}\right]g_{n,m} = \epsilon g_{n,m}\end{multline}$$
+$$g_{n+1,m} + g_{n-1,m} + g_{n,m+1} + g_{n,m-1} + \left[2\cos(2\pi\alpha n + \nu_n) + 2\cos(2\pi\alpha m + \nu_m) + U\delta_{n,m}\right]g_{n,m} = \epsilon g_{n,m}$$
 
 In practice I just set \\(\nu_n=\nu_m=\nu\\). Computing this is not much more difficult conceptually than before. The big problem is that the size of the Hamiltonian is now \\(N^2{\times}N^2\\). Finding eigenvalues and determinants of matricies tends to grow as \\(n^3\\) for an \\(n{\times}n\\) matrix, so you can see that this might be a problem.
 
@@ -357,3 +357,4 @@ Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specif
 * Honeycomb lattice.
 * Hall conductivity.
 * Edge states and wavefunctions.
+* Landau Level basis.
