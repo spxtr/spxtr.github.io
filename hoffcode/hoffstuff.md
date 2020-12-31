@@ -1,6 +1,6 @@
 # Hofstadter's Butterfly
 
-<span id="attrib">*Written in May 2020 by [spxtr](https://github.com/spxtr). All of the code used to generate the figures is available on [GitHub](https://github.com/spxtr/spxtr.github.io). Feel free to open issues and pull requests.*</span>
+<span id="attrib">*Written in May 2020 by [spxtr](https://github.com/spxtr). Last updated December 2020. All of the code used to generate the figures is available on [GitHub](https://github.com/spxtr/spxtr.github.io). Feel free to open issues and pull requests.*</span>
 
 Crystals have a recurring lattice structure with periodicities of a few times \\(10^{-10}\\) meters. In a magnetic field, electrons in the crystal undergo cyclotron motion with a different periodicity. In 1976, Douglas Hofstadter described[[1]](#fn1) the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!
 
@@ -10,6 +10,7 @@ Crystals have a recurring lattice structure with periodicities of a few times \\
 1. [Lyapunov exponent](#lyapunov)
 1. [Interacting butterflies](#interacting)
 1. [Moiré patterns](#moire)
+1. [Anisotropy](#anisotropy)
 1. [References](#refs)
 1. [TODO](#todo)
 
@@ -338,6 +339,25 @@ Here I am rotating between \\(0\\) and \\(\pi/3\\):
 
 Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.
 
+<a id="anisotropy"></a>
+## Anisotropy <span class="sourcelink">[[source]](https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part5.py)</span>
+
+We can add anisotropy by changing the relative strength of the hopping terms from that hopping matrix. This is easy!
+
+```
+def Hamiltonian(N, α, t):
+    H = np.zeros((N, N))
+    for i in range(N):
+        H[i, i] = 2 * t * np.cos(2 * π * i * α)
+        H[(i + 1) % N, i] = 1
+        H[(i - 1) % N, i] = 1
+    return H
+```
+
+When we plot that and vary \\(t\\), you can see that the butterfly smears out and the gaps start to close up. This is also shown in [[6]](#fn6).
+
+![Anisotropy.](hoffimg/5_0.png "Anisotropy.")
+
 <a id="refs"></a>
 ## References
 
@@ -350,6 +370,8 @@ Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specif
 <a id="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). "Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices". *Nature.* **497** (7451): 598–602.</a>
 
 <a id="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). "Two interacting Hofstadter butterflies". *Phys. Rev. B* **55**: 9524-9533.</a>
+
+<a id="fn6">[6]: Hasegawa, Y.; Hatsugai, Y.; Kohmoto, M.; (1990). "Stabilization of flux states on two-dimensional lattices". *Phys. Rev. B* **41**: 9174-9182.</a>
 
 <a id="todo"></a>
 ## TODO

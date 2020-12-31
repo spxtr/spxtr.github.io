@@ -64,7 +64,7 @@ img {
 <title>Hofstadter's Butterfly</title>
 <body>
 <h1>Hofstadter's Butterfly</h1>
-<p><span id="attrib"><em>Written in May 2020 by <a href="https://github.com/spxtr">spxtr</a>. All of the code used to generate the figures is available on <a href="https://github.com/spxtr/spxtr.github.io">GitHub</a>. Feel free to open issues and pull requests.</em></span></p>
+<p><span id="attrib"><em>Written in May 2020 by <a href="https://github.com/spxtr">spxtr</a>. Last updated December 2020. All of the code used to generate the figures is available on <a href="https://github.com/spxtr/spxtr.github.io">GitHub</a>. Feel free to open issues and pull requests.</em></span></p>
 <p>Crystals have a recurring lattice structure with periodicities of a few times \(10^{-10}\) meters. In a magnetic field, electrons in the crystal undergo cyclotron motion with a different periodicity. In 1976, Douglas Hofstadter described<a href="#fn1">[1]</a> the interesting behavior that appears in 2D systems as the two periodicities become comparable. The energy spectrum of such systems is a beautiful fractal butterfly. Let's compute it!</p>
 <ol>
 <li><a href="#background">Background</a></li>
@@ -73,6 +73,7 @@ img {
 <li><a href="#lyapunov">Lyapunov exponent</a></li>
 <li><a href="#interacting">Interacting butterflies</a></li>
 <li><a href="#moire">Moiré patterns</a></li>
+<li><a href="#anisotropy">Anisotropy</a></li>
 <li><a href="#refs">References</a></li>
 <li><a href="#todo">TODO</a></li>
 </ol>
@@ -291,6 +292,19 @@ def honeycomb(N):
 <p>Here I am rotating between \(0\) and \(\pi/3\):</p>
 <p><img src="hoffimg/4_2.png" alt="Honeycomb lattices rotating." title="Honeycomb lattices rotating." /></p>
 <p>Twisted bilayer graphene also shows Hofstadter's butterfly, and at a very specific angle it also does other cool things. More on that another time.</p>
+<p><a id="anisotropy"></a></p>
+<h2>Anisotropy <span class="sourcelink"><a href="https://github.com/spxtr/spxtr.github.io/blob/master/hoffcode/part5.py">[source]</a></span></h2>
+<p>We can add anisotropy by changing the relative strength of the hopping terms from that hopping matrix. This is easy!</p>
+<pre><code>def Hamiltonian(N, α, t):
+    H = np.zeros((N, N))
+    for i in range(N):
+        H[i, i] = 2 * t * np.cos(2 * π * i * α)
+        H[(i + 1) % N, i] = 1
+        H[(i - 1) % N, i] = 1
+    return H
+</code></pre>
+<p>When we plot that and vary \(t\), you can see that the butterfly smears out and the gaps start to close up. This is also shown in <a href="#fn6">[6]</a>.</p>
+<p><img src="hoffimg/5_0.png" alt="Anisotropy." title="Anisotropy." /></p>
 <p><a id="refs"></a></p>
 <h2>References</h2>
 <p><a id="fn1">[1]: Hofstadter, Douglas R. (1976). &quot;Energy levels and wavefunctions of Bloch electrons in rational and irrational magnetic fields&quot;. <em>Physical Review B.</em> <strong>14</strong> (6): 2239–2249.</a></p>
@@ -298,6 +312,7 @@ def honeycomb(N):
 <p><a id="fn3">[3]: Hunt, B.; Sanchez-Yamagishi, J. D.; Young, A. F.; Yankowitz, M.; LeRoy, B. J.; Watanabe, K.; Taniguchi, T.; Moon, P.; Koshino, M.; Jarillo-Herrero, P.; Ashoori, R. C. (2013). &quot;Massive Dirac fermions and Hofstadter butterfly in a van der Waals heterostructure&quot;. <em>Science.</em> <strong>340</strong> (6139): 1427–1430.</a></p>
 <p><a id="fn4">[4]: Dean, C. R.; Wang, L.; Maher, P.; Forsythe, C.; Ghahari, F.; Gao, Y.; Katoch, J.; Ishigami, M.; Moon, P.; Koshino, M.; Taniguchi, T.; Watanabe, K.; Shepard, K. L.; Hone, J.; Kim, P. (30 May 2013). &quot;Hofstadter's butterfly and the fractal quantum Hall effect in moiré superlattices&quot;. <em>Nature.</em> <strong>497</strong> (7451): 598–602.</a></p>
 <p><a id="fn5">[5]: Barelli, A.; Bellissard, J.; Jacquod, P.; Shepelyansky, D. L. (1997). &quot;Two interacting Hofstadter butterflies&quot;. <em>Phys. Rev. B</em> <strong>55</strong>: 9524-9533.</a></p>
+<p><a id="fn6">[6]: Hasegawa, Y.; Hatsugai, Y.; Kohmoto, M.; (1990). &quot;Stabilization of flux states on two-dimensional lattices&quot;. <em>Phys. Rev. B</em> <strong>41</strong>: 9174-9182.</a></p>
 <p><a id="todo"></a></p>
 <h2>TODO</h2>
 <ul>
